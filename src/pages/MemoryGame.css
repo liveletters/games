@@ -1,0 +1,402 @@
+.memory-game {
+  width: 100%;
+  min-height: 100vh;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #FCF1E4;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Game Container - Always stacked with slider at bottom */
+.game-container {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  align-items: center;
+  flex-direction: column;
+}
+
+.game-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+}
+
+/* Difficulty Selector - Always at bottom, full width, horizontal */
+.difficulty-selector {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  width: calc(100% - 30px);
+  max-width: 1200px;
+  justify-content: center;
+}
+
+.difficulty-selector label {
+  font-size: 20px;
+  color: #32373c;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Horizontal slider */
+.difficulty-selector input[type="range"] {
+  flex: 1;
+  height: 12px;
+  border-radius: 6px;
+  background: #d3d3d3;
+  outline: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  min-width: 200px;
+  max-width: 800px;
+}
+
+.difficulty-selector input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #488a74;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.difficulty-selector input[type="range"]::-webkit-slider-thumb:hover {
+  background: #55af91;
+  transform: scale(1.1);
+  box-shadow: 0 3px 10px rgba(72, 138, 116, 0.4);
+}
+
+.difficulty-selector input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(1.15);
+}
+
+.difficulty-selector input[type="range"]::-moz-range-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #488a74;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.difficulty-selector input[type="range"]::-moz-range-thumb:hover {
+  background: #55af91;
+  transform: scale(1.1);
+  box-shadow: 0 3px 10px rgba(72, 138, 116, 0.4);
+}
+
+.difficulty-selector input[type="range"]::-moz-range-thumb:active {
+  transform: scale(1.15);
+}
+
+/* Start Button - at bottom before difficulty slider */
+.start-button {
+  background: #488a74;
+  color: white;
+  border: none;
+  padding: 16px 50px;
+  font-size: 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: calc(100% - 30px);
+  max-width: 400px;
+}
+
+.start-button:hover {
+  background: #55af91;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(72, 138, 116, 0.4);
+}
+
+.start-button:active {
+  transform: translateY(0);
+}
+
+/* Cards Grid - Flexbox for true centered incomplete rows */
+.cards-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 20px;
+  max-width: 100%;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Card Styling - Square cards for little kids with imprecise fingers */
+.card {
+  width: 130px;
+  height: 130px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-front {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.card-front.letter {
+  background-image: url('/images/cover_letters.png');
+  background-color: #4b9d81;
+}
+
+.card-front.animal {
+  background-image: url('/images/cover_animals.png');
+  background-color: #4b9d81;
+}
+
+.card-back {
+  background: white;
+  transform: rotateY(180deg);
+  padding: 8px;
+  position: relative;
+}
+
+.card-back img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  transition: filter 0.3s;
+}
+
+/* Grayscale all matched cards (both letters and animals) */
+.card.matched .card-back img {
+  filter: grayscale(100%);
+}
+
+/* Matched cards */
+.card.matched {
+  pointer-events: none;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  max-width: 90%;
+  width: 400px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.4s;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-content h2 {
+  color: #488a74;
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.modal-content p {
+  font-size: 18px;
+  color: #32373c;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.modal-content .shop-message {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.modal-content .shop-message a {
+  color: #488a74;
+  font-weight: bold;
+  text-decoration: none;
+  border-bottom: 2px solid #488a74;
+  transition: all 0.3s;
+}
+
+.modal-content .shop-message a:hover {
+  color: #55af91;
+  border-bottom-color: #55af91;
+}
+
+.modal-content button {
+  background: #488a74;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.modal-content button:hover {
+  background: #55af91;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design - Tablet optimized as primary use case */
+
+/* Tablet landscape (primary use case) */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .cards-grid {
+    gap: 18px;
+  }
+
+  .start-button {
+    padding: 16px 50px;
+    font-size: 20px;
+  }
+}
+
+/* Tablet portrait */
+@media (min-width: 481px) and (max-width: 768px) {
+  .memory-game h1 {
+    font-size: 30px;
+  }
+
+  .cards-grid {
+    gap: 12px;
+    padding: 15px;
+  }
+
+  .modal-content {
+    padding: 35px 25px;
+    width: 85%;
+  }
+
+  .modal-content h2 {
+    font-size: 28px;
+  }
+
+  .start-button {
+    padding: 14px 40px;
+    font-size: 18px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .memory-game h1 {
+    font-size: 24px;
+  }
+
+  .cards-grid {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .modal-content {
+    padding: 25px 15px;
+    width: 95%;
+  }
+
+  .modal-content h2 {
+    font-size: 22px;
+  }
+
+  .start-button {
+    padding: 12px 28px;
+    font-size: 16px;
+  }
+
+  .difficulty-selector {
+    padding: 15px;
+  }
+}
+
+/* Ensure touch targets are large enough on all devices */
+@media (hover: none) and (pointer: coarse) {
+  .start-button {
+    min-height: 48px;
+    min-width: 120px;
+  }
+
+  .difficulty-selector input[type="range"]::-webkit-slider-thumb {
+    width: 40px;
+    height: 40px;
+  }
+
+  .difficulty-selector input[type="range"]::-moz-range-thumb {
+    width: 40px;
+    height: 40px;
+  }
+}
