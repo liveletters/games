@@ -130,13 +130,39 @@
   transform: translateY(0);
 }
 
-/* Cards Grid - Flexbox for true centered incomplete rows */
+/* Cards Container - holds both columns */
+.cards-container {
+  display: flex;
+  gap: 40px;
+  width: 100%;
+  max-width: 1400px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Individual column for letters or animals */
+.cards-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.column-title {
+  color: #488a74;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  font-family: 'Heebo', sans-serif;
+}
+
+/* Cards Grid - Flexbox for centered cards within each column */
 .cards-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
-  padding: 20px;
-  max-width: 100%;
+  padding: 10px;
   width: 100%;
   justify-content: center;
 }
@@ -330,6 +356,15 @@
     font-size: 30px;
   }
 
+  .cards-container {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .column-title {
+    font-size: 22px;
+  }
+
   .cards-grid {
     gap: 12px;
     padding: 15px;
@@ -354,6 +389,15 @@
 @media (max-width: 480px) {
   .memory-game h1 {
     font-size: 24px;
+  }
+
+  .cards-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .column-title {
+    font-size: 20px;
   }
 
   .cards-grid {

@@ -123,22 +123,54 @@ function MemoryGame() {
 
       <div className="game-container">
         <div className="game-content">
-          <div className="cards-grid">
-            {cards.map((card, index) => (
-              <div
-                key={`${card.id}-${index}`}
-                className={`card ${flipped.includes(index) || matched.includes(card.id) ? 'flipped' : ''} ${matched.includes(card.id) ? 'matched' : ''}`}
-                onClick={() => handleCardClick(index)}
-              >
-                <div className="card-inner">
-                  <div className={`card-front ${card.type}`}>
-                  </div>
-                  <div className={`card-back ${card.type}`}>
-                    <img src={card.image} alt={card.type} />
-                  </div>
-                </div>
+          <div className="cards-container">
+            <div className="cards-column">
+              <h3 className="column-title">אותיות</h3>
+              <div className="cards-grid">
+                {cards.filter(card => card.type === 'letter').map((card, originalIndex) => {
+                  const index = cards.indexOf(card)
+                  return (
+                    <div
+                      key={`${card.id}-${index}`}
+                      className={`card ${flipped.includes(index) || matched.includes(card.id) ? 'flipped' : ''} ${matched.includes(card.id) ? 'matched' : ''}`}
+                      onClick={() => handleCardClick(index)}
+                    >
+                      <div className="card-inner">
+                        <div className={`card-front ${card.type}`}>
+                        </div>
+                        <div className={`card-back ${card.type}`}>
+                          <img src={card.image} alt={card.type} />
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
-            ))}
+            </div>
+
+            <div className="cards-column">
+              <h3 className="column-title">בעלי חיים</h3>
+              <div className="cards-grid">
+                {cards.filter(card => card.type === 'animal').map((card, originalIndex) => {
+                  const index = cards.indexOf(card)
+                  return (
+                    <div
+                      key={`${card.id}-${index}`}
+                      className={`card ${flipped.includes(index) || matched.includes(card.id) ? 'flipped' : ''} ${matched.includes(card.id) ? 'matched' : ''}`}
+                      onClick={() => handleCardClick(index)}
+                    >
+                      <div className="card-inner">
+                        <div className={`card-front ${card.type}`}>
+                        </div>
+                        <div className={`card-back ${card.type}`}>
+                          <img src={card.image} alt={card.type} />
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
           </div>
         </div>
 
