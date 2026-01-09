@@ -263,14 +263,42 @@ function MemoryGame() {
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2>כל הכבוד! סיימת ב-{moves} מהלכים!</h2>
+            {/* Decorative stars */}
+            <div className="star star-1">★</div>
+            <div className="star star-2">★</div>
+            <div className="star star-3">★</div>
+            <div className="star star-4">★</div>
+            <div className="star star-5">★</div>
+            <div className="star star-6">★</div>
+
+            {/* Achievement badge */}
+            <div className="achievement-badge">
+              <div className="badge-ribbon"></div>
+              <div className="badge-circle">
+                <div className="badge-icon">🏆</div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <h2 className="victory-title">כל הכבוד!</h2>
+            <div className="moves-display">
+              <span className="moves-label">סיימת ב-</span>
+              <span className="moves-number">{moves}</span>
+              <span className="moves-label">מהלכים</span>
+            </div>
+
+            <div className="modal-divider"></div>
+
             <p className="shop-message">
-              אפשר לקנות את הקלפים שלנו באתר{' '}
+              אפשר לקנות את הקלפים שלנו{' '}
               <a href="https://liveletters.co.il/shop/" target="_blank" rel="noopener noreferrer">
-                כאן
+                באתר שלנו
               </a>
             </p>
-            <button onClick={() => setShowModal(false)}>לשחק שוב</button>
+
+            <button className="play-again-btn" onClick={() => setShowModal(false)}>
+              לשחק שוב
+            </button>
           </div>
         </div>
       )}

@@ -246,102 +246,501 @@
   transition: opacity 0.5s ease-out;
 }
 
-/* Modal */
+/* Modal - Victory Celebration */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(72, 138, 116, 0.85);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn 0.3s;
+  animation: fadeIn 0.4s ease-out;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
+    backdrop-filter: blur(0);
   }
   to {
     opacity: 1;
+    backdrop-filter: blur(8px);
   }
 }
 
 .modal-content {
-  background: white;
-  padding: 40px;
-  border-radius: 16px;
+  position: relative;
+  background: linear-gradient(135deg, #ffffff 0%, #FCF1E4 100%);
+  padding: 60px 50px 40px;
+  border-radius: 32px;
   text-align: center;
   max-width: 90%;
-  width: 400px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  animation: slideUp 0.4s;
+  width: 480px;
+  box-shadow:
+    0 20px 60px rgba(72, 138, 116, 0.3),
+    0 0 0 8px rgba(255, 215, 0, 0.15),
+    inset 0 2px 0 rgba(255, 255, 255, 0.8);
+  animation: celebrationEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: visible;
 }
 
-@keyframes slideUp {
-  from {
-    transform: translateY(50px);
+@keyframes celebrationEntrance {
+  0% {
+    transform: scale(0.3) rotate(-5deg);
     opacity: 0;
   }
-  to {
-    transform: translateY(0);
+  50% {
+    transform: scale(1.05) rotate(2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
     opacity: 1;
   }
 }
 
-.modal-content h2 {
-  color: #488a74;
+/* Decorative Stars */
+.star {
+  position: absolute;
   font-size: 32px;
-  margin-bottom: 20px;
+  color: #FFD700;
+  opacity: 0;
+  animation: starFloat 3s ease-in-out infinite, starFadeIn 0.6s ease-out forwards;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  pointer-events: none;
 }
 
-.modal-content p {
-  font-size: 18px;
-  color: #32373c;
-  margin-bottom: 15px;
-  line-height: 1.6;
+.star-1 {
+  top: 10%;
+  left: 10%;
+  animation-delay: 0.3s, 0s;
 }
 
-.modal-content .shop-message {
-  margin-top: 20px;
-  padding: 20px;
-  background: #f5f7fa;
-  border-radius: 8px;
-  font-size: 16px;
+.star-2 {
+  top: 15%;
+  right: 15%;
+  animation-delay: 0.5s, 0.1s;
+  font-size: 24px;
 }
 
-.modal-content .shop-message a {
-  color: #488a74;
-  font-weight: bold;
-  text-decoration: none;
-  border-bottom: 2px solid #488a74;
-  transition: all 0.3s;
+.star-3 {
+  top: 45%;
+  left: 5%;
+  animation-delay: 0.7s, 0.2s;
+  font-size: 28px;
 }
 
-.modal-content .shop-message a:hover {
-  color: #55af91;
-  border-bottom-color: #55af91;
+.star-4 {
+  top: 45%;
+  right: 5%;
+  animation-delay: 0.4s, 0.15s;
+  font-size: 28px;
 }
 
-.modal-content button {
+.star-5 {
+  bottom: 25%;
+  left: 12%;
+  animation-delay: 0.6s, 0.25s;
+  font-size: 20px;
+}
+
+.star-6 {
+  bottom: 25%;
+  right: 12%;
+  animation-delay: 0.8s, 0.2s;
+  font-size: 20px;
+}
+
+@keyframes starFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes starFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(10deg);
+  }
+}
+
+/* Achievement Badge */
+.achievement-badge {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: badgeDrop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s backwards;
+}
+
+@keyframes badgeDrop {
+  0% {
+    transform: translateX(-50%) translateY(-200px) rotate(0deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(-50%) translateY(10px) rotate(5deg);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.badge-circle {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #FFD700 0%, #FDB94E 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 8px 24px rgba(253, 185, 78, 0.4),
+    0 0 0 6px #488a74,
+    0 0 0 8px #FFD700,
+    inset 0 -8px 16px rgba(0, 0, 0, 0.1),
+    inset 0 2px 4px rgba(255, 255, 255, 0.5);
+  position: relative;
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    box-shadow:
+      0 8px 24px rgba(253, 185, 78, 0.4),
+      0 0 0 6px #488a74,
+      0 0 0 8px #FFD700,
+      inset 0 -8px 16px rgba(0, 0, 0, 0.1),
+      inset 0 2px 4px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    box-shadow:
+      0 8px 32px rgba(253, 185, 78, 0.6),
+      0 0 0 6px #55af91,
+      0 0 0 8px #FFD700,
+      inset 0 -8px 16px rgba(0, 0, 0, 0.1),
+      inset 0 2px 4px rgba(255, 255, 255, 0.5);
+  }
+}
+
+.badge-ribbon {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 30px;
   background: #488a74;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+  box-shadow: 0 4px 8px rgba(72, 138, 116, 0.3);
+}
+
+.badge-icon {
+  font-size: 48px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  animation: iconBounce 1s ease-in-out infinite;
+}
+
+@keyframes iconBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Victory Title */
+.victory-title {
+  font-family: 'Heebo', sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  color: #488a74;
+  margin: 30px 0 20px;
+  text-shadow:
+    2px 2px 0 rgba(255, 215, 0, 0.3),
+    0 4px 12px rgba(72, 138, 116, 0.2);
+  letter-spacing: -0.5px;
+  animation: titlePop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s backwards;
+  white-space: nowrap;
+}
+
+@keyframes titlePop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Moves Display */
+.moves-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 20px 0;
+  font-family: 'Heebo', sans-serif;
+  animation: movesFadeIn 0.6s ease-out 0.6s backwards;
+}
+
+.moves-label {
+  font-size: 20px;
+  color: #32373c;
+  font-weight: 500;
+}
+
+.moves-number {
+  font-size: 36px;
+  font-weight: 800;
+  color: #FFD700;
+  background: linear-gradient(135deg, #488a74 0%, #55af91 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding: 0 8px;
+  position: relative;
+}
+
+.moves-number::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(253, 185, 78, 0.15));
+  border-radius: 8px;
+  z-index: -1;
+}
+
+@keyframes movesFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Divider */
+.modal-divider {
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(72, 138, 116, 0.2) 20%,
+    rgba(72, 138, 116, 0.4) 50%,
+    rgba(72, 138, 116, 0.2) 80%,
+    transparent 100%);
+  margin: 25px 0;
+  position: relative;
+  animation: dividerGrow 0.6s ease-out 0.8s backwards;
+}
+
+.modal-divider::after {
+  content: '★';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  color: #FFD700;
+  background: #FCF1E4;
+  padding: 0 8px;
+}
+
+@keyframes dividerGrow {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* Shop Message */
+.shop-message {
+  font-family: 'Heebo', sans-serif;
+  font-size: 17px;
+  color: #32373c;
+  margin: 20px 0;
+  line-height: 1.6;
+  animation: shopFadeIn 0.6s ease-out 1s backwards;
+}
+
+.shop-message a {
+  color: #488a74;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 2px solid rgba(72, 138, 116, 0.3);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  padding-bottom: 2px;
+}
+
+.shop-message a:hover {
+  color: #55af91;
+  border-bottom-color: #FFD700;
+  transform: translateY(-1px);
+}
+
+@keyframes shopFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Play Again Button */
+.play-again-btn {
+  font-family: 'Heebo', sans-serif;
+  background: linear-gradient(135deg, #488a74 0%, #55af91 100%);
   color: white;
   border: none;
-  padding: 12px 30px;
-  font-size: 16px;
-  border-radius: 8px;
+  padding: 16px 48px;
+  font-size: 20px;
+  font-weight: 700;
+  border-radius: 16px;
   cursor: pointer;
-  margin-top: 20px;
-  font-weight: bold;
-  transition: all 0.3s;
+  margin-top: 25px;
+  box-shadow:
+    0 4px 16px rgba(72, 138, 116, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+  animation: buttonFadeIn 0.6s ease-out 1.2s backwards;
 }
 
-.modal-content button:hover {
-  background: #55af91;
-  transform: translateY(-2px);
+.play-again-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 100%);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.play-again-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow:
+    0 8px 24px rgba(72, 138, 116, 0.4),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+.play-again-btn:hover::before {
+  transform: translateX(100%);
+}
+
+.play-again-btn:active {
+  transform: translateY(-2px) scale(1.02);
+}
+
+@keyframes buttonFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Responsive Adjustments */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 90%;
+    padding: 50px 30px 35px;
+  }
+
+  .victory-title {
+    font-size: 36px;
+  }
+
+  .moves-number {
+    font-size: 28px;
+  }
+
+  .moves-label {
+    font-size: 18px;
+  }
+
+  .badge-circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .badge-icon {
+    font-size: 38px;
+  }
+
+  .play-again-btn {
+    padding: 14px 40px;
+    font-size: 18px;
+  }
+
+  .star {
+    font-size: 24px;
+  }
+
+  .star-2,
+  .star-5,
+  .star-6 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 45px 25px 30px;
+  }
+
+  .victory-title {
+    font-size: 32px;
+  }
+
+  .moves-number {
+    font-size: 24px;
+  }
+
+  .moves-label {
+    font-size: 16px;
+  }
+
+  .shop-message {
+    font-size: 15px;
+  }
+
+  .badge-circle {
+    width: 70px;
+    height: 70px;
+  }
+
+  .badge-icon {
+    font-size: 32px;
+  }
+
+  .achievement-badge {
+    top: -40px;
+  }
+
+  .play-again-btn {
+    padding: 12px 32px;
+    font-size: 16px;
+  }
 }
 
 /* Responsive Design - Tablet optimized as primary use case */
