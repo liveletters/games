@@ -205,14 +205,11 @@
   transition: filter 0.3s;
 }
 
-/* Grayscale all matched cards (both letters and animals) */
-.card.matched .card-back img {
-  filter: grayscale(100%);
-}
-
-/* Matched cards */
+/* Fade out matched cards */
 .card.matched {
+  opacity: 0;
   pointer-events: none;
+  transition: opacity 0.5s ease-out;
 }
 
 /* Modal */
