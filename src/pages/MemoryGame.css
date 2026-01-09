@@ -157,14 +157,23 @@
   font-family: 'Heebo', sans-serif;
 }
 
-/* Cards Grid - Flexbox for centered cards within each column */
+/* Cards Grid - Flexbox for cards within each column */
 .cards-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
   padding: 10px;
   width: 100%;
-  justify-content: center;
+}
+
+/* Left column (letters) - align cards to the right */
+.cards-column:first-child .cards-grid {
+  justify-content: flex-end;
+}
+
+/* Right column (animals) - align cards to the left */
+.cards-column:last-child .cards-grid {
+  justify-content: flex-start;
 }
 
 /* Card Styling - Square cards for little kids with imprecise fingers */
@@ -370,6 +379,12 @@
     padding: 15px;
   }
 
+  /* Center cards on stacked mobile layout */
+  .cards-column:first-child .cards-grid,
+  .cards-column:last-child .cards-grid {
+    justify-content: center;
+  }
+
   .modal-content {
     padding: 35px 25px;
     width: 85%;
@@ -403,6 +418,12 @@
   .cards-grid {
     gap: 10px;
     padding: 10px;
+  }
+
+  /* Center cards on stacked mobile layout */
+  .cards-column:first-child .cards-grid,
+  .cards-column:last-child .cards-grid {
+    justify-content: center;
   }
 
   .modal-content {
