@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Confetti from 'react-confetti'
 import { playMatchSound, playVictorySound } from '../utils/sounds'
 import './MemoryGame.css'
@@ -17,6 +17,8 @@ function MemoryGame() {
     width: window.innerWidth,
     height: window.innerHeight
   })
+  const [musicMode, setMusicMode] = useState(1) // 0 = off, 1 = music1, 2 = music2
+  const audioRef = useRef(null)
 
   // Update window size on resize
   useEffect(() => {
@@ -29,6 +31,33 @@ function MemoryGame() {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
+
+  // Start music on mount
+  useEffect(() => {
+    if (audioRef.current && musicMode === 1) {
+      audioRef.current.src = '/music/game_audio_1.mp3'
+      audioRef.current.load()
+      audioRef.current.play().catch(err => console.log('Audio autoplay failed:', err))
+    }
+  }, [])
+
+  // Toggle music mode: 0 -> 1 -> 2 -> 0
+  const toggleMusic = () => {
+    const nextMode = (musicMode + 1) % 3
+    setMusicMode(nextMode)
+
+    if (!audioRef.current) return
+
+    if (nextMode === 0) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    } else {
+      const musicFile = nextMode === 1 ? '/music/game_audio_1.mp3' : '/music/game_audio_2.mp3'
+      audioRef.current.src = musicFile
+      audioRef.current.load()
+      audioRef.current.play().catch(err => console.log('Audio play failed:', err))
+    }
+  }
 
   // Initialize/reset game
   const initGame = (numPairs) => {
@@ -121,6 +150,35 @@ function MemoryGame() {
 
   return (
     <div className="memory-game" dir="rtl">
+      {/* Background Music Audio Element */}
+      <audio ref={audioRef} loop />
+
+      {/* Music Toggle Button */}
+      <button className="music-toggle" onClick={toggleMusic} aria-label="Toggle music">
+        {musicMode === 0 && (
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+            <path d="M4.93 4.93l14.14 14.14" stroke="currentColor" strokeWidth="2"/>
+          </svg>
+        )}
+        {musicMode === 1 && (
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+          </svg>
+        )}
+        {musicMode === 2 && (
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            {/* Two eighth notes with flags */}
+            <circle cx="7" cy="17" r="3"/>
+            <rect x="9.5" y="6" width="1.5" height="11"/>
+            <path d="M11 6 Q13 6 13 9 L11 8 Z"/>
+            <circle cx="17" cy="17" r="3"/>
+            <rect x="19.5" y="6" width="1.5" height="11"/>
+            <path d="M21 6 Q23 6 23 9 L21 8 Z"/>
+          </svg>
+        )}
+      </button>
+
       {gameComplete && (
         <Confetti
           width={windowSize.width}

@@ -415,7 +415,6 @@
 
   .cards-grid {
     gap: 10px;
-    padding: 10px;
   }
 
   /* Center cards on stacked mobile layout */
@@ -459,4 +458,39 @@
     width: 40px;
     height: 40px;
   }
+}
+
+/* Music Toggle Button - Fixed position bottom right */
+.music-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #488a74;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+  z-index: 999;
+}
+
+.music-toggle:hover {
+  background: #55af91;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(72, 138, 116, 0.4);
+}
+
+.music-toggle:active {
+  transform: scale(1.05);
+}
+
+.music-toggle svg {
+  width: 32px;
+  height: 32px;
 }
