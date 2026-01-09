@@ -133,7 +133,7 @@
 /* Cards Container - holds both columns */
 .cards-container {
   display: flex;
-  gap: 40px;
+  gap: 15px;
   width: 100%;
   max-width: 1400px;
   justify-content: center;
