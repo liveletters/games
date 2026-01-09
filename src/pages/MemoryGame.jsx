@@ -82,6 +82,15 @@ function MemoryGame() {
       return
     }
 
+    // Prevent matching same card types (letter with letter, or animal with animal)
+    if (flipped.length === 1) {
+      const firstCard = cards[flipped[0]]
+      const secondCard = cards[index]
+      if (firstCard.type === secondCard.type) {
+        return // Can only match letter with animal, not same types
+      }
+    }
+
     const newFlipped = [...flipped, index]
     setFlipped(newFlipped)
 
