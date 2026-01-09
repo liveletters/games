@@ -296,7 +296,10 @@ function MemoryGame() {
               </a>
             </p>
 
-            <button className="play-again-btn" onClick={() => setShowModal(false)}>
+            <button className="play-again-btn" onClick={() => {
+              setShowModal(false)
+              initGame(difficulty)
+            }}>
               לשחק שוב
             </button>
           </div>
