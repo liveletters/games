@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Confetti from 'react-confetti'
+import { playMatchSound, playVictorySound } from '../utils/sounds'
 import './MemoryGame.css'
 
 const TOTAL_PAIRS = 22 // Hebrew alphabet has 22 letters
@@ -90,6 +91,7 @@ function MemoryGame() {
 
       if (cards[first].pairId === cards[second].pairId) {
         // Match found
+        playMatchSound()
         setMatched([...matched, cards[first].id, cards[second].id])
         setFlipped([])
       } else {
@@ -103,6 +105,7 @@ function MemoryGame() {
   useEffect(() => {
     if (matched.length === difficulty * 2 && matched.length > 0) {
       setGameComplete(true)
+      playVictorySound()
       setTimeout(() => setShowModal(true), 1000)
     }
   }, [matched, difficulty])
