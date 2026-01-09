@@ -162,7 +162,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
-  padding: 10px;
   width: 100%;
 }
 
@@ -376,7 +375,6 @@
 
   .cards-grid {
     gap: 12px;
-    padding: 15px;
   }
 
   /* Center cards on stacked mobile layout */

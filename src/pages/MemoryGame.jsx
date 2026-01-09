@@ -134,7 +134,6 @@ function MemoryGame() {
         <div className="game-content">
           <div className="cards-container">
             <div className="cards-column">
-              <h3 className="column-title">אותיות</h3>
               <div className="cards-grid">
                 {cards.filter(card => card.type === 'letter').map((card, originalIndex) => {
                   const index = cards.indexOf(card)
@@ -158,7 +157,6 @@ function MemoryGame() {
             </div>
 
             <div className="cards-column">
-              <h3 className="column-title">בעלי חיים</h3>
               <div className="cards-grid">
                 {cards.filter(card => card.type === 'animal').map((card, originalIndex) => {
                   const index = cards.indexOf(card)
