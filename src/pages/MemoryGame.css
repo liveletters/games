@@ -191,9 +191,9 @@
 }
 
 .card-back {
-  background: white;
+  background: transparent;
   transform: rotateY(180deg);
-  padding: 8px;
+  padding: 0;
   position: relative;
 }
 
