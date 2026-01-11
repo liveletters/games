@@ -10,6 +10,7 @@ function MemoryGame() {
   const [cards, setCards] = useState([])
   const [flipped, setFlipped] = useState([])
   const [matched, setMatched] = useState([])
+  const [justMatched, setJustMatched] = useState([]) // Cards that just matched (show glow before fade)
   const [moves, setMoves] = useState(0)
   const [gameComplete, setGameComplete] = useState(false)
   const [showModal, setShowModal] = useState(false)
@@ -18,6 +19,7 @@ function MemoryGame() {
     height: window.innerHeight
   })
   const [musicMode, setMusicMode] = useState(1) // 0 = off, 1 = music1, 2 = music2
+  const [cardSize, setCardSize] = useState(130) // Dynamic card size
   const audioRef = useRef(null)
 
   // Update window size on resize
@@ -31,6 +33,53 @@ function MemoryGame() {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
+
+  // Calculate dynamic card size based on screen and difficulty
+  useEffect(() => {
+    const calculateCardSize = () => {
+      const { width, height } = windowSize
+
+      // Account for UI elements and padding
+      const uiHeight = 200 // Difficulty slider, button, gaps, and padding
+      const availableHeight = height - uiHeight
+      const availableWidth = width - 60 // Side padding
+
+      // Each column gets half the width (minus column gap)
+      const columnWidth = (availableWidth - 15) / 2
+
+      // Card gap
+      const gap = 15
+
+      // Calculate how many cards per row based on column width
+      // Start with a card size and see how many fit
+      let optimalSize = 130
+
+      // Try different sizes from 60 to 150
+      for (let size = 150; size >= 60; size -= 5) {
+        // How many cards fit per row in each column?
+        const cardsPerRow = Math.floor((columnWidth + gap) / (size + gap))
+        if (cardsPerRow < 1) continue
+
+        // How many rows needed for 'difficulty' cards?
+        const rowsNeeded = Math.ceil(difficulty / cardsPerRow)
+
+        // Total height needed
+        const totalHeight = rowsNeeded * size + (rowsNeeded - 1) * gap
+
+        // If it fits, use this size
+        if (totalHeight <= availableHeight && cardsPerRow >= 1) {
+          optimalSize = size
+          break
+        }
+      }
+
+      // Ensure minimum size of 60px and maximum of 150px
+      optimalSize = Math.max(60, Math.min(150, optimalSize))
+      setCardSize(optimalSize)
+    }
+
+    calculateCardSize()
+  }, [windowSize, difficulty])
 
   // Start music on mount
   useEffect(() => {
@@ -65,6 +114,7 @@ function MemoryGame() {
     setShowModal(false)
     setFlipped([])
     setMatched([])
+    setJustMatched([])
     setMoves(0)
 
     // Select random pairs based on difficulty
@@ -130,8 +180,15 @@ function MemoryGame() {
       if (cards[first].pairId === cards[second].pairId) {
         // Match found
         playMatchSound()
-        setMatched([...matched, cards[first].id, cards[second].id])
+        const newMatches = [cards[first].id, cards[second].id]
+        setJustMatched([...justMatched, ...newMatches])
         setFlipped([])
+
+        // After 1.2 seconds, move from justMatched to matched (fade out)
+        setTimeout(() => {
+          setJustMatched(prev => prev.filter(id => !newMatches.includes(id)))
+          setMatched(prev => [...prev, ...newMatches])
+        }, 1200)
       } else {
         // No match
         setTimeout(() => setFlipped([]), 1000)
@@ -149,7 +206,7 @@ function MemoryGame() {
   }, [matched, difficulty])
 
   return (
-    <div className="memory-game" dir="rtl">
+    <div className="memory-game" dir="rtl" style={{ '--card-size': `${cardSize}px` }}>
       {/* Background Music Audio Element */}
       <audio ref={audioRef} loop />
 
@@ -198,7 +255,7 @@ function MemoryGame() {
                   return (
                     <div
                       key={`${card.id}-${index}`}
-                      className={`card ${flipped.includes(index) || matched.includes(card.id) ? 'flipped' : ''} ${matched.includes(card.id) ? 'matched' : ''}`}
+                      className={`card ${flipped.includes(index) || matched.includes(card.id) || justMatched.includes(card.id) ? 'flipped' : ''} ${justMatched.includes(card.id) ? 'just-matched' : ''} ${matched.includes(card.id) ? 'matched' : ''}`}
                       onClick={() => handleCardClick(index)}
                     >
                       <div className="card-inner">
@@ -221,7 +278,7 @@ function MemoryGame() {
                   return (
                     <div
                       key={`${card.id}-${index}`}
-                      className={`card ${flipped.includes(index) || matched.includes(card.id) ? 'flipped' : ''} ${matched.includes(card.id) ? 'matched' : ''}`}
+                      className={`card ${flipped.includes(index) || matched.includes(card.id) || justMatched.includes(card.id) ? 'flipped' : ''} ${justMatched.includes(card.id) ? 'just-matched' : ''} ${matched.includes(card.id) ? 'matched' : ''}`}
                       onClick={() => handleCardClick(index)}
                     >
                       <div className="card-inner">
