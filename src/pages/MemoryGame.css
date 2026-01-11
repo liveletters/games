@@ -800,23 +800,12 @@
     font-size: 30px;
   }
 
-  .cards-container {
-    flex-direction: column;
-    gap: 30px;
-  }
-
   .column-title {
     font-size: 22px;
   }
 
   .cards-grid {
     gap: 12px;
-  }
-
-  /* Center cards on stacked mobile layout */
-  .cards-column:first-child .cards-grid,
-  .cards-column:last-child .cards-grid {
-    justify-content: center;
   }
 
   .modal-content {
@@ -840,23 +829,12 @@
     font-size: 24px;
   }
 
-  .cards-container {
-    flex-direction: column;
-    gap: 20px;
-  }
-
   .column-title {
     font-size: 20px;
   }
 
   .cards-grid {
     gap: 10px;
-  }
-
-  /* Center cards on stacked mobile layout */
-  .cards-column:first-child .cards-grid,
-  .cards-column:last-child .cards-grid {
-    justify-content: center;
   }
 
   .modal-content {
