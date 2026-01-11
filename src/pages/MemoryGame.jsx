@@ -19,7 +19,7 @@ function MemoryGame() {
     height: window.innerHeight
   })
   const [musicMode, setMusicMode] = useState(1) // 0 = off, 1 = music1, 2 = music2
-  const [cardSize, setCardSize] = useState(130) // Dynamic card size
+  const [cardSize, setCardSize] = useState(null) // Dynamic card size (calculated on mount)
   const audioRef = useRef(null)
 
   // Update window size on resize
@@ -39,23 +39,25 @@ function MemoryGame() {
     const calculateCardSize = () => {
       const { width, height } = windowSize
 
-      // Account for UI elements and padding
-      const uiHeight = 200 // Difficulty slider, button, gaps, and padding
-      const availableHeight = height - uiHeight
+      // Account for fixed header (80px) in parent site and card area padding
+      // Button and slider will be below the fold (scrollable)
+      const headerHeight = 80
+      const cardAreaPadding = 30 // Top/bottom padding for cards
+      const availableHeight = height - headerHeight - cardAreaPadding
       const availableWidth = width - 60 // Side padding
 
       // Each column gets half the width (minus column gap)
-      const columnWidth = (availableWidth - 15) / 2
+      const columnGap = 15
+      const columnWidth = (availableWidth - columnGap) / 2
 
       // Card gap
       const gap = 15
 
-      // Calculate how many cards per row based on column width
-      // Start with a card size and see how many fit
-      let optimalSize = 130
+      // Calculate optimal size by trying different card sizes
+      let optimalSize = 60 // Start with minimum
 
-      // Try different sizes from 60 to 150
-      for (let size = 150; size >= 60; size -= 5) {
+      // Try different sizes from 150 down to 60
+      for (let size = 150; size >= 60; size -= 2) {
         // How many cards fit per row in each column?
         const cardsPerRow = Math.floor((columnWidth + gap) / (size + gap))
         if (cardsPerRow < 1) continue
@@ -73,8 +75,10 @@ function MemoryGame() {
         }
       }
 
-      // Ensure minimum size of 60px and maximum of 150px
+      // Ensure size is valid
       optimalSize = Math.max(60, Math.min(150, optimalSize))
+
+      // Immediately update without batching
       setCardSize(optimalSize)
     }
 
@@ -184,11 +188,11 @@ function MemoryGame() {
         setJustMatched([...justMatched, ...newMatches])
         setFlipped([])
 
-        // After 1.2 seconds, move from justMatched to matched (fade out)
+        // After 2 seconds, move from justMatched to matched (fade out)
         setTimeout(() => {
           setJustMatched(prev => prev.filter(id => !newMatches.includes(id)))
           setMatched(prev => [...prev, ...newMatches])
-        }, 1200)
+        }, 2000)
       } else {
         // No match
         setTimeout(() => setFlipped([]), 1000)
@@ -206,7 +210,7 @@ function MemoryGame() {
   }, [matched, difficulty])
 
   return (
-    <div className="memory-game" dir="rtl" style={{ '--card-size': `${cardSize}px` }}>
+    <div className="memory-game" dir="rtl" style={{ '--card-size': cardSize ? `${cardSize}px` : '100px' }}>
       {/* Background Music Audio Element */}
       <audio ref={audioRef} loop />
 

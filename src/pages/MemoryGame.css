@@ -177,10 +177,11 @@
 
 /* Card Styling - Square cards for little kids with imprecise fingers */
 .card {
-  width: var(--card-size, 130px);
-  height: var(--card-size, 130px);
+  width: var(--card-size, 100px);
+  height: var(--card-size, 100px);
   perspective: 1000px;
   cursor: pointer;
+  transition: width 0.3s ease, height 0.3s ease;
 }
 
 .card-inner {
@@ -242,7 +243,7 @@
 /* Glow effect for just-matched cards */
 .card.just-matched {
   pointer-events: none;
-  animation: matchGlow 1.2s ease-out;
+  animation: matchGlow 2s ease-out;
 }
 
 .card.just-matched .card-inner {
