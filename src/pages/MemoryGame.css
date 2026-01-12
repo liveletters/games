@@ -136,8 +136,25 @@
   }
 
   .difficulty-control input[type="range"] {
-    width: 150px;
+    width: 100px; /* Reduced from 150px to fit better on mobile */
     height: 12px;
+  }
+}
+
+/* Even smaller on very narrow screens */
+@media (max-width: 480px) {
+  .difficulty-control input[type="range"] {
+    width: 80px;
+  }
+
+  .control-btn {
+    width: 45px;
+    height: 45px;
+  }
+
+  .game-controls {
+    gap: 10px;
+    padding: 10px 12px;
   }
 }
 

@@ -35,6 +35,23 @@ function MemoryGame() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  // Global click handler to start music on first interaction
+  useEffect(() => {
+    const handleFirstClick = () => {
+      startMusicIfNeeded()
+    }
+
+    if (!hasInteracted) {
+      document.addEventListener('click', handleFirstClick, { once: true })
+      document.addEventListener('touchstart', handleFirstClick, { once: true })
+    }
+
+    return () => {
+      document.removeEventListener('click', handleFirstClick)
+      document.removeEventListener('touchstart', handleFirstClick)
+    }
+  }, [hasInteracted])
+
   // Calculate dynamic card size based on screen and difficulty
   useEffect(() => {
     const calculateCardSize = () => {
