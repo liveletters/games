@@ -39,9 +39,9 @@ function MemoryGame() {
     const calculateCardSize = () => {
       const { width, height } = windowSize
 
-      // Account for fixed header (60px) in parent site and card area padding
+      // Account for fixed header (80px) in parent site and card area padding
       // Button and slider will be below the fold (scrollable)
-      const headerHeight = 60
+      const headerHeight = 80
       const cardAreaPadding = 30 // Top/bottom padding for cards
       const availableHeight = height - headerHeight - cardAreaPadding
       const availableWidth = width - 60 // Side padding
