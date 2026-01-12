@@ -26,13 +26,28 @@ function MemoryGame() {
   // Update window size on resize
   useEffect(() => {
     const handleResize = () => {
+      // Use visualViewport for more accurate mobile dimensions
+      const vv = window.visualViewport
       setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight
+        width: vv ? vv.width : window.innerWidth,
+        height: vv ? vv.height : window.innerHeight
       })
     }
+
+    handleResize() // Set initial size
+
+    // Listen to both resize and visualViewport resize for mobile
     window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize)
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleResize)
+      }
+    }
   }, [])
 
   // Set initial audio source on mount
@@ -56,12 +71,16 @@ function MemoryGame() {
       // Check if landscape or portrait based on aspect ratio
       const isLandscape = width >= height
 
+      // Mobile safety buffer (for browser chrome that might not be accounted for)
+      const isMobile = width < 768
+      const mobileSafetyBuffer = isMobile ? (isLandscape ? 60 : 40) : 0
+
       // In landscape: controls on right side (100px)
       // In portrait: controls at bottom (90px)
       const controlsWidth = isLandscape ? 100 : 0
       const controlsHeight = isLandscape ? 0 : 90
 
-      const availableHeight = height - headerHeight - cardAreaPadding - controlsHeight
+      const availableHeight = height - headerHeight - cardAreaPadding - controlsHeight - mobileSafetyBuffer
       const availableWidth = width - 60 - controlsWidth // Side padding + controls
 
       // Each column gets half the width (minus column gap)
