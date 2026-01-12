@@ -28,12 +28,10 @@ function MemoryGame() {
     const handleResize = () => {
       // Use visualViewport for more accurate mobile dimensions
       const vv = window.visualViewport
-      const newSize = {
+      setWindowSize({
         width: vv ? vv.width : window.innerWidth,
         height: vv ? vv.height : window.innerHeight
-      }
-      console.log('📱 Window resize:', newSize, 'visualViewport:', !!vv)
-      setWindowSize(newSize)
+      })
     }
 
     handleResize() // Set initial size
@@ -66,15 +64,17 @@ function MemoryGame() {
     const calculateCardSize = () => {
       const { width, height } = windowSize
 
-      // Account for fixed header (80px) and control bar space
-      const headerHeight = 80
+      // Check if mobile device
+      const isMobile = width < 768
+
+      // Account for fixed header: 60px on mobile, 80px on desktop
+      const headerHeight = isMobile ? 60 : 80
       const cardAreaPadding = 30
 
       // Check if landscape or portrait based on aspect ratio
       const isLandscape = width >= height
 
       // Mobile safety buffer (for browser chrome that might not be accounted for)
-      const isMobile = width < 768
       const mobileSafetyBuffer = isMobile ? (isLandscape ? 60 : 40) : 0
 
       // In landscape: controls on right side (100px)
@@ -84,16 +84,6 @@ function MemoryGame() {
 
       const availableHeight = height - headerHeight - cardAreaPadding - controlsHeight - mobileSafetyBuffer
       const availableWidth = width - 60 - controlsWidth // Side padding + controls
-
-      console.log('🎴 Card calc:', {
-        windowSize: { width, height },
-        isLandscape,
-        isMobile,
-        mobileSafetyBuffer,
-        availableHeight,
-        availableWidth,
-        difficulty
-      })
 
       // Each column gets half the width (minus column gap)
       const columnGap = 15
@@ -126,8 +116,6 @@ function MemoryGame() {
 
       // Ensure size is valid
       optimalSize = Math.max(60, Math.min(150, optimalSize))
-
-      console.log('✅ Final card size:', optimalSize)
 
       // Immediately update without batching
       setCardSize(optimalSize)
