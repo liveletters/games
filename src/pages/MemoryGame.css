@@ -26,46 +26,126 @@
   max-width: 1400px;
 }
 
-/* Difficulty Selector - Always at bottom, full width, horizontal */
-.difficulty-selector {
+/* Game Controls Bar - Responsive positioning */
+.game-controls {
+  position: fixed;
   background: white;
-  padding: 20px 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 20px;
-  width: calc(100% - 30px);
-  max-width: 1200px;
+  gap: 15px;
+  padding: 12px 16px;
+  z-index: 999;
+}
+
+/* Landscape (wide): Controls on right side, vertical layout */
+@media (min-aspect-ratio: 1/1) {
+  .game-controls {
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    flex-direction: column;
+    width: 70px;
+  }
+}
+
+/* Portrait (tall): Controls at bottom, horizontal layout */
+@media (max-aspect-ratio: 1/1) {
+  .game-controls {
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    max-width: 90%;
+  }
+}
+
+/* Control Buttons (New Game & Music) */
+.control-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #488a74;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+  flex-shrink: 0;
 }
 
-.difficulty-selector label {
+.control-btn:hover {
+  background: #55af91;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(72, 138, 116, 0.4);
+}
+
+.control-btn:active {
+  transform: scale(1.05);
+}
+
+.control-btn svg {
+  flex-shrink: 0;
+}
+
+/* Difficulty Control */
+.difficulty-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Landscape: vertical slider */
+@media (min-aspect-ratio: 1/1) {
+  .difficulty-control {
+    flex-direction: column;
+  }
+
+  .difficulty-control input[type="range"] {
+    writing-mode: bt-lr;
+    -webkit-appearance: slider-vertical;
+    height: 150px;
+    width: 12px;
+  }
+}
+
+/* Portrait: horizontal slider */
+@media (max-aspect-ratio: 1/1) {
+  .difficulty-control {
+    flex-direction: row;
+  }
+
+  .difficulty-control input[type="range"] {
+    width: 150px;
+    height: 12px;
+  }
+}
+
+/* Difficulty Icons */
+.difficulty-icon {
   font-size: 20px;
-  color: #32373c;
-  font-weight: 600;
-  white-space: nowrap;
+  line-height: 1;
+  user-select: none;
 }
 
-/* Horizontal slider */
-.difficulty-selector input[type="range"] {
-  flex: 1;
-  height: 12px;
+/* Slider Styling */
+.difficulty-control input[type="range"] {
   border-radius: 6px;
   background: #d3d3d3;
   outline: none;
   -webkit-appearance: none;
   cursor: pointer;
-  min-width: 200px;
-  max-width: 800px;
 }
 
-.difficulty-selector input[type="range"]::-webkit-slider-thumb {
+.difficulty-control input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: #488a74;
   cursor: pointer;
@@ -73,19 +153,19 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.difficulty-selector input[type="range"]::-webkit-slider-thumb:hover {
+.difficulty-control input[type="range"]::-webkit-slider-thumb:hover {
   background: #55af91;
-  transform: scale(1.1);
+  transform: scale(1.15);
   box-shadow: 0 3px 10px rgba(72, 138, 116, 0.4);
 }
 
-.difficulty-selector input[type="range"]::-webkit-slider-thumb:active {
-  transform: scale(1.15);
+.difficulty-control input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(1.2);
 }
 
-.difficulty-selector input[type="range"]::-moz-range-thumb {
-  width: 36px;
-  height: 36px;
+.difficulty-control input[type="range"]::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: #488a74;
   cursor: pointer;
@@ -94,40 +174,14 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.difficulty-selector input[type="range"]::-moz-range-thumb:hover {
+.difficulty-control input[type="range"]::-moz-range-thumb:hover {
   background: #55af91;
-  transform: scale(1.1);
+  transform: scale(1.15);
   box-shadow: 0 3px 10px rgba(72, 138, 116, 0.4);
 }
 
-.difficulty-selector input[type="range"]::-moz-range-thumb:active {
-  transform: scale(1.15);
-}
-
-/* Start Button - at bottom before difficulty slider */
-.start-button {
-  background: #488a74;
-  color: white;
-  border: none;
-  padding: 16px 50px;
-  font-size: 20px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: calc(100% - 30px);
-  max-width: 400px;
-}
-
-.start-button:hover {
-  background: #55af91;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(72, 138, 116, 0.4);
-}
-
-.start-button:active {
-  transform: translateY(0);
+.difficulty-control input[type="range"]::-moz-range-thumb:active {
+  transform: scale(1.2);
 }
 
 /* Cards Container - holds both columns */
@@ -872,37 +926,3 @@
   }
 }
 
-/* Music Toggle Button - Fixed position bottom right */
-.music-toggle {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: #488a74;
-  color: white;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s;
-  z-index: 999;
-}
-
-.music-toggle:hover {
-  background: #55af91;
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(72, 138, 116, 0.4);
-}
-
-.music-toggle:active {
-  transform: scale(1.05);
-}
-
-.music-toggle svg {
-  width: 32px;
-  height: 32px;
-}

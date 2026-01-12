@@ -20,6 +20,7 @@ function MemoryGame() {
   })
   const [musicMode, setMusicMode] = useState(1) // 0 = off, 1 = music1, 2 = music2
   const [cardSize, setCardSize] = useState(null) // Dynamic card size (calculated on mount)
+  const [hasInteracted, setHasInteracted] = useState(false) // Track first user interaction
   const audioRef = useRef(null)
 
   // Update window size on resize
@@ -39,12 +40,20 @@ function MemoryGame() {
     const calculateCardSize = () => {
       const { width, height } = windowSize
 
-      // Account for fixed header (80px) in parent site and card area padding
-      // Button and slider will be below the fold (scrollable)
+      // Account for fixed header (80px) and control bar space
       const headerHeight = 80
-      const cardAreaPadding = 30 // Top/bottom padding for cards
-      const availableHeight = height - headerHeight - cardAreaPadding
-      const availableWidth = width - 60 // Side padding
+      const cardAreaPadding = 30
+
+      // Check if landscape or portrait based on aspect ratio
+      const isLandscape = width >= height
+
+      // In landscape: controls on right side (100px)
+      // In portrait: controls at bottom (90px)
+      const controlsWidth = isLandscape ? 100 : 0
+      const controlsHeight = isLandscape ? 0 : 90
+
+      const availableHeight = height - headerHeight - cardAreaPadding - controlsHeight
+      const availableWidth = width - 60 - controlsWidth // Side padding + controls
 
       // Each column gets half the width (minus column gap)
       const columnGap = 15
@@ -85,19 +94,22 @@ function MemoryGame() {
     calculateCardSize()
   }, [windowSize, difficulty])
 
-  // Start music on mount
-  useEffect(() => {
-    if (audioRef.current && musicMode === 1) {
-      audioRef.current.src = '/music/game_audio_1.mp3'
+  // Start music on first user interaction (browser autoplay policy)
+  const startMusicIfNeeded = () => {
+    if (!hasInteracted && audioRef.current && musicMode !== 0) {
+      setHasInteracted(true)
+      const musicFile = musicMode === 1 ? '/music/game_audio_1.mp3' : '/music/game_audio_2.mp3'
+      audioRef.current.src = musicFile
       audioRef.current.load()
-      audioRef.current.play().catch(err => console.log('Audio autoplay failed:', err))
+      audioRef.current.play().catch(err => console.log('Audio play failed:', err))
     }
-  }, [])
+  }
 
   // Toggle music mode: 0 -> 1 -> 2 -> 0
   const toggleMusic = () => {
     const nextMode = (musicMode + 1) % 3
     setMusicMode(nextMode)
+    setHasInteracted(true) // Mark as interacted
 
     if (!audioRef.current) return
 
@@ -114,6 +126,7 @@ function MemoryGame() {
 
   // Initialize/reset game
   const initGame = (numPairs) => {
+    startMusicIfNeeded() // Start music on first interaction
     setGameComplete(false)
     setShowModal(false)
     setFlipped([])
@@ -161,6 +174,8 @@ function MemoryGame() {
 
   // Handle card click
   const handleCardClick = (index) => {
+    startMusicIfNeeded() // Start music on first interaction
+
     if (flipped.length === 2 || flipped.includes(index) || matched.includes(cards[index].id)) {
       return
     }
@@ -214,31 +229,6 @@ function MemoryGame() {
       {/* Background Music Audio Element */}
       <audio ref={audioRef} loop />
 
-      {/* Music Toggle Button */}
-      <button className="music-toggle" onClick={toggleMusic} aria-label="Toggle music">
-        {musicMode === 0 && (
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-            <path d="M4.93 4.93l14.14 14.14" stroke="currentColor" strokeWidth="2"/>
-          </svg>
-        )}
-        {musicMode === 1 && (
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-          </svg>
-        )}
-        {musicMode === 2 && (
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-            {/* Two eighth notes with flags */}
-            <circle cx="7" cy="17" r="3"/>
-            <rect x="9.5" y="6" width="1.5" height="11"/>
-            <path d="M11 6 Q13 6 13 9 L11 8 Z"/>
-            <circle cx="17" cy="17" r="3"/>
-            <rect x="19.5" y="6" width="1.5" height="11"/>
-            <path d="M21 6 Q23 6 23 9 L21 8 Z"/>
-          </svg>
-        )}
-      </button>
 
       {gameComplete && (
         <Confetti
@@ -300,24 +290,57 @@ function MemoryGame() {
           </div>
         </div>
 
-        <button
-          className="start-button"
-          onClick={() => initGame(difficulty)}
-        >
-          התחל משחק חדש
-        </button>
+        {/* Game Controls Bar */}
+        <div className="game-controls">
+          {/* New Game Button */}
+          <button className="control-btn" onClick={() => initGame(difficulty)} aria-label="New game">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+            </svg>
+          </button>
 
-        {/* Difficulty slider - always at bottom, full width */}
-        <div className="difficulty-selector">
-          <label htmlFor="difficulty">רמת קושי</label>
-          <input
-            type="range"
-            id="difficulty"
-            min="3"
-            max={TOTAL_PAIRS}
-            value={difficulty}
-            onChange={(e) => setDifficulty(parseInt(e.target.value))}
-          />
+          {/* Difficulty Slider */}
+          <div className="difficulty-control">
+            <span className="difficulty-icon easy">😊</span>
+            <input
+              type="range"
+              id="difficulty"
+              min="3"
+              max={TOTAL_PAIRS}
+              value={difficulty}
+              onChange={(e) => {
+                startMusicIfNeeded()
+                setDifficulty(parseInt(e.target.value))
+              }}
+              aria-label="Difficulty level"
+            />
+            <span className="difficulty-icon hard">🔥</span>
+          </div>
+
+          {/* Music Toggle Button */}
+          <button className="control-btn" onClick={toggleMusic} aria-label="Toggle music">
+            {musicMode === 0 && (
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                <path d="M4.93 4.93l14.14 14.14" stroke="currentColor" strokeWidth="2"/>
+              </svg>
+            )}
+            {musicMode === 1 && (
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+              </svg>
+            )}
+            {musicMode === 2 && (
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="7" cy="17" r="3"/>
+                <rect x="9.5" y="6" width="1.5" height="11"/>
+                <path d="M11 6 Q13 6 13 9 L11 8 Z"/>
+                <circle cx="17" cy="17" r="3"/>
+                <rect x="19.5" y="6" width="1.5" height="11"/>
+                <path d="M21 6 Q23 6 23 9 L21 8 Z"/>
+              </svg>
+            )}
+          </button>
         </div>
       </div>
 
