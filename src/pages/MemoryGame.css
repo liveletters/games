@@ -26,6 +26,19 @@
   max-width: 1400px;
 }
 
+/* Add margins to prevent cards from going under fixed controls */
+@media (min-aspect-ratio: 1/1) {
+  .game-content {
+    margin-right: 100px; /* Space for controls on right */
+  }
+}
+
+@media (max-aspect-ratio: 1/1) {
+  .game-content {
+    margin-bottom: 100px; /* Space for controls at bottom */
+  }
+}
+
 /* Game Controls Bar - Responsive positioning */
 .game-controls {
   position: fixed;
@@ -102,14 +115,17 @@
 /* Landscape: vertical slider */
 @media (min-aspect-ratio: 1/1) {
   .difficulty-control {
-    flex-direction: column;
+    flex-direction: column-reverse; /* Reverse so easy is at bottom, hard at top */
   }
 
   .difficulty-control input[type="range"] {
-    writing-mode: bt-lr;
     -webkit-appearance: slider-vertical;
+    appearance: slider-vertical;
+    writing-mode: vertical-lr;
+    direction: rtl; /* Makes slider go up for higher values */
     height: 150px;
     width: 12px;
+    margin: 0;
   }
 }
 
