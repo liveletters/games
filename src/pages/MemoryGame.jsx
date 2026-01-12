@@ -44,26 +44,6 @@ function MemoryGame() {
     }
   }, [])
 
-  // Global click handler to start music on first interaction
-  useEffect(() => {
-    const handleFirstClick = () => {
-      if (!hasInteracted && audioRef.current && musicMode !== 0) {
-        setHasInteracted(true)
-        audioRef.current.play().catch(err => console.log('Audio play failed:', err))
-      }
-    }
-
-    if (!hasInteracted) {
-      document.addEventListener('click', handleFirstClick, { once: true })
-      document.addEventListener('touchstart', handleFirstClick, { once: true })
-    }
-
-    return () => {
-      document.removeEventListener('click', handleFirstClick)
-      document.removeEventListener('touchstart', handleFirstClick)
-    }
-  }, [hasInteracted, musicMode])
-
   // Calculate dynamic card size based on screen and difficulty
   useEffect(() => {
     const calculateCardSize = () => {
@@ -123,15 +103,6 @@ function MemoryGame() {
     calculateCardSize()
   }, [windowSize, difficulty])
 
-  // Start music on first user interaction (browser autoplay policy)
-  const startMusicIfNeeded = () => {
-    if (!hasInteracted && audioRef.current && musicMode !== 0) {
-      setHasInteracted(true)
-      // Audio source is already set on mount, just play it
-      audioRef.current.play().catch(err => console.log('Audio play failed:', err))
-    }
-  }
-
   // Toggle music mode: 0 -> 1 -> 2 -> 0
   const toggleMusic = () => {
     const nextMode = (musicMode + 1) % 3
@@ -153,7 +124,12 @@ function MemoryGame() {
 
   // Initialize/reset game
   const initGame = (numPairs) => {
-    startMusicIfNeeded() // Start music on first interaction
+    // Start music on first interaction - must be synchronous
+    if (!hasInteracted && audioRef.current && musicMode !== 0) {
+      setHasInteracted(true)
+      audioRef.current.play().catch(() => {})
+    }
+
     setGameComplete(false)
     setShowModal(false)
     setFlipped([])
@@ -201,7 +177,11 @@ function MemoryGame() {
 
   // Handle card click
   const handleCardClick = (index) => {
-    startMusicIfNeeded() // Start music on first interaction
+    // Start music on first interaction - must be inline and synchronous
+    if (!hasInteracted && audioRef.current && musicMode !== 0) {
+      setHasInteracted(true)
+      audioRef.current.play().catch(() => {})
+    }
 
     if (flipped.length === 2 || flipped.includes(index) || matched.includes(cards[index].id)) {
       return
@@ -336,7 +316,11 @@ function MemoryGame() {
               max={TOTAL_PAIRS}
               value={difficulty}
               onChange={(e) => {
-                startMusicIfNeeded()
+                // Start music on first interaction - inline and synchronous
+                if (!hasInteracted && audioRef.current && musicMode !== 0) {
+                  setHasInteracted(true)
+                  audioRef.current.play().catch(() => {})
+                }
                 setDifficulty(parseInt(e.target.value))
               }}
               aria-label="Difficulty level"
