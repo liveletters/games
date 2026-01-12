@@ -35,10 +35,22 @@ function MemoryGame() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  // Set initial audio source on mount
+  useEffect(() => {
+    if (audioRef.current && musicMode !== 0) {
+      const musicFile = musicMode === 1 ? '/music/game_audio_1.mp3' : '/music/game_audio_2.mp3'
+      audioRef.current.src = musicFile
+      audioRef.current.load()
+    }
+  }, [])
+
   // Global click handler to start music on first interaction
   useEffect(() => {
     const handleFirstClick = () => {
-      startMusicIfNeeded()
+      if (!hasInteracted && audioRef.current && musicMode !== 0) {
+        setHasInteracted(true)
+        audioRef.current.play().catch(err => console.log('Audio play failed:', err))
+      }
     }
 
     if (!hasInteracted) {
@@ -50,7 +62,7 @@ function MemoryGame() {
       document.removeEventListener('click', handleFirstClick)
       document.removeEventListener('touchstart', handleFirstClick)
     }
-  }, [hasInteracted])
+  }, [hasInteracted, musicMode])
 
   // Calculate dynamic card size based on screen and difficulty
   useEffect(() => {
@@ -115,9 +127,7 @@ function MemoryGame() {
   const startMusicIfNeeded = () => {
     if (!hasInteracted && audioRef.current && musicMode !== 0) {
       setHasInteracted(true)
-      const musicFile = musicMode === 1 ? '/music/game_audio_1.mp3' : '/music/game_audio_2.mp3'
-      audioRef.current.src = musicFile
-      audioRef.current.load()
+      // Audio source is already set on mount, just play it
       audioRef.current.play().catch(err => console.log('Audio play failed:', err))
     }
   }
