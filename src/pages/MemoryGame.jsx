@@ -28,10 +28,12 @@ function MemoryGame() {
     const handleResize = () => {
       // Use visualViewport for more accurate mobile dimensions
       const vv = window.visualViewport
-      setWindowSize({
+      const newSize = {
         width: vv ? vv.width : window.innerWidth,
         height: vv ? vv.height : window.innerHeight
-      })
+      }
+      console.log('📱 Window resize:', newSize, 'visualViewport:', !!vv)
+      setWindowSize(newSize)
     }
 
     handleResize() // Set initial size
@@ -83,6 +85,16 @@ function MemoryGame() {
       const availableHeight = height - headerHeight - cardAreaPadding - controlsHeight - mobileSafetyBuffer
       const availableWidth = width - 60 - controlsWidth // Side padding + controls
 
+      console.log('🎴 Card calc:', {
+        windowSize: { width, height },
+        isLandscape,
+        isMobile,
+        mobileSafetyBuffer,
+        availableHeight,
+        availableWidth,
+        difficulty
+      })
+
       // Each column gets half the width (minus column gap)
       const columnGap = 15
       const columnWidth = (availableWidth - columnGap) / 2
@@ -114,6 +126,8 @@ function MemoryGame() {
 
       // Ensure size is valid
       optimalSize = Math.max(60, Math.min(150, optimalSize))
+
+      console.log('✅ Final card size:', optimalSize)
 
       // Immediately update without batching
       setCardSize(optimalSize)
