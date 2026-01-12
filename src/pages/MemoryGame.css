@@ -26,16 +26,16 @@
   max-width: 1400px;
 }
 
-/* Add margins to prevent cards from going under fixed controls */
+/* Add padding to main container to prevent cards from going under fixed controls */
 @media (min-aspect-ratio: 1/1) {
-  .game-content {
-    margin-right: 100px; /* Space for controls on right */
+  .memory-game {
+    padding-right: 100px; /* Space for controls on right */
   }
 }
 
 @media (max-aspect-ratio: 1/1) {
-  .game-content {
-    margin-bottom: 100px; /* Space for controls at bottom */
+  .memory-game {
+    padding-bottom: 100px; /* Space for controls at bottom */
   }
 }
 
