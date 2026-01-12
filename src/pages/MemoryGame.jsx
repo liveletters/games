@@ -125,15 +125,6 @@ function MemoryGame() {
 
   // Initialize/reset game
   const initGame = (numPairs) => {
-    // Start music on first interaction - must be synchronous
-    if (!hasInteracted && audioRef.current && musicMode !== 0) {
-      console.log('initGame: Attempting to play music')
-      setHasInteracted(true)
-      audioRef.current.play()
-        .then(() => console.log('Music started from initGame'))
-        .catch((err) => console.error('initGame music failed:', err))
-    }
-
     setGameComplete(false)
     setShowModal(false)
     setFlipped([])
@@ -322,17 +313,7 @@ function MemoryGame() {
               min="3"
               max={TOTAL_PAIRS}
               value={difficulty}
-              onChange={(e) => {
-                // Start music on first interaction - inline and synchronous
-                if (!hasInteracted && audioRef.current && musicMode !== 0) {
-                  console.log('Slider: Attempting to play music')
-                  setHasInteracted(true)
-                  audioRef.current.play()
-                    .then(() => console.log('Music started from slider'))
-                    .catch((err) => console.error('Slider music failed:', err))
-                }
-                setDifficulty(parseInt(e.target.value))
-              }}
+              onChange={(e) => setDifficulty(parseInt(e.target.value))}
               aria-label="Difficulty level"
             />
             <span className="difficulty-icon hard">🔥</span>
