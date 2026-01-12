@@ -41,6 +41,7 @@ function MemoryGame() {
       const musicFile = musicMode === 1 ? '/music/game_audio_1.mp3' : '/music/game_audio_2.mp3'
       audioRef.current.src = musicFile
       audioRef.current.load()
+      console.log('Audio loaded:', musicFile)
     }
   }, [])
 
@@ -126,8 +127,11 @@ function MemoryGame() {
   const initGame = (numPairs) => {
     // Start music on first interaction - must be synchronous
     if (!hasInteracted && audioRef.current && musicMode !== 0) {
+      console.log('initGame: Attempting to play music')
       setHasInteracted(true)
-      audioRef.current.play().catch(() => {})
+      audioRef.current.play()
+        .then(() => console.log('Music started from initGame'))
+        .catch((err) => console.error('initGame music failed:', err))
     }
 
     setGameComplete(false)
@@ -179,8 +183,11 @@ function MemoryGame() {
   const handleCardClick = (index) => {
     // Start music on first interaction - must be inline and synchronous
     if (!hasInteracted && audioRef.current && musicMode !== 0) {
+      console.log('Attempting to play music, hasInteracted:', hasInteracted, 'musicMode:', musicMode)
       setHasInteracted(true)
-      audioRef.current.play().catch(() => {})
+      audioRef.current.play()
+        .then(() => console.log('Music started successfully'))
+        .catch((err) => console.error('Music play failed:', err))
     }
 
     if (flipped.length === 2 || flipped.includes(index) || matched.includes(cards[index].id)) {
@@ -318,8 +325,11 @@ function MemoryGame() {
               onChange={(e) => {
                 // Start music on first interaction - inline and synchronous
                 if (!hasInteracted && audioRef.current && musicMode !== 0) {
+                  console.log('Slider: Attempting to play music')
                   setHasInteracted(true)
-                  audioRef.current.play().catch(() => {})
+                  audioRef.current.play()
+                    .then(() => console.log('Music started from slider'))
+                    .catch((err) => console.error('Slider music failed:', err))
                 }
                 setDifficulty(parseInt(e.target.value))
               }}
