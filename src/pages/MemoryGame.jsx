@@ -41,7 +41,6 @@ function MemoryGame() {
       const musicFile = musicMode === 1 ? '/music/game_audio_1.mp3' : '/music/game_audio_2.mp3'
       audioRef.current.src = musicFile
       audioRef.current.load()
-      console.log('Audio loaded:', musicFile)
     }
   }, [])
 
@@ -172,13 +171,10 @@ function MemoryGame() {
 
   // Handle card click
   const handleCardClick = (index) => {
-    // Start music on first interaction - must be inline and synchronous
+    // Start music on first card click
     if (!hasInteracted && audioRef.current && musicMode !== 0) {
-      console.log('Attempting to play music, hasInteracted:', hasInteracted, 'musicMode:', musicMode)
       setHasInteracted(true)
-      audioRef.current.play()
-        .then(() => console.log('Music started successfully'))
-        .catch((err) => console.error('Music play failed:', err))
+      audioRef.current.play().catch(() => {}) // Silently fail if blocked
     }
 
     if (flipped.length === 2 || flipped.includes(index) || matched.includes(cards[index].id)) {
